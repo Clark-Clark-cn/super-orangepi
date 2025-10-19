@@ -29,3 +29,19 @@ Complete the deployment of xiaozhi, and add temperature testing as an MCP
 
   
 
+## 10/20/2025 - Complete speech recognition  
+
+Completed the speech recognition module and discovered it includes built-in MCP support, integrated with Alibaba Cloud's QWEN model.  
+Deployed Py-Xiaozhi and confirmed it can correctly recognize and respond (currently waiting for speakers to arrive, so audio playback is not yet available).  
+
+## Next Steps:  
+1. Add new MCP services to enable system control and resource monitoring capabilities for the voice assistant.  
+2. Implement countdowns, timers, and alarm features.  
+3. Add task scheduling functionality.  
+4. Install a desktop environment for use as a set-top box.  
+5. Incorporate router functionalities to act as a gateway for network proxy and ad-blocking.  
+6. Set up a Minecraft server with integrated AI chat and control features.
+
+![image.png](https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzQyMSwicHVyIjoiYmxvYl9pZCJ9fQ==--1ae49510b5d09a12c8126505e3cee97b4c427342/image.png)
+  
+
