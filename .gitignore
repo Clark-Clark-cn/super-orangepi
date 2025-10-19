@@ -1,0 +1,10 @@
+.vscode/c_cpp_properties.json
+.vscode/settings.json
+bin/
+build/
+dist/
+node_modules/
+.env
+.env.local
+.env.*.local
+*log

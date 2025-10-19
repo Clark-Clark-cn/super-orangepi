@@ -1,0 +1,6 @@
+[submodule "voice_rec/py-xiaozhi"]
+	path = voice_rec/py-xiaozhi
+	url = http://github.com/huangjunsen0406/py-xiaozhi
+[submodule "voice_rec/xiaozhi-esp32-server"]
+	path = voice_rec/xiaozhi-esp32-server
+	url = http://github.com/explorer-exe-bilibili/xiaozhi-esp32-server.git
