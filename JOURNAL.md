@@ -6,10 +6,6 @@
   ==================================================================
 -->
 
-This is my journal of the design and building process of **super-orangepi**.  
-You can view this journal in more detail on **Hack Club Blueprint** [here](https://blueprint.hackclub.com/projects/672).
-
-
 ## 10/19/2025 - temperature detection, preparing for speech recognition  
 
 ### What Did
@@ -44,4 +40,13 @@ Deployed Py-Xiaozhi and confirmed it can correctly recognize and respond (curren
 
 ![image.png](https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzQyMSwicHVyIjoiYmxvYl9pZCJ9fQ==--1ae49510b5d09a12c8126505e3cee97b4c427342/image.png)
   
+
+## 10/21/2025 - Optimized the warehouse structure, setting up set-top box  
+
+I used repository links to connect several GitHub repositories, but unfortunately, issues occurred. It took me about 1.5 hours to fix them.
+
+I installed the desktop environment and planned to install TV software, but unfortunately, the software only provides an AMD64 version, not ARM64. So I'm currently attempting to install it by decompiling and recompiling the software.
+
+![image.png](https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mzc0NCwicHVyIjoiYmxvYl9pZCJ9fQ==--1ebebd499509e567baf32a4d26eba8365383fcd7/image.png)
+![image.png](https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mzc0NiwicHVyIjoiYmxvYl9pZCJ9fQ==--4673d7fd5f9f0292074f50b593dc51e9dc0f4114/image.png)  
 
