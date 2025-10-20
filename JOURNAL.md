@@ -47,6 +47,7 @@ I used repository links to connect several GitHub repositories, but unfortunatel
 
 I installed the desktop environment and planned to install TV software, but unfortunately, the software only provides an AMD64 version, not ARM64. So I'm currently attempting to install it by decompiling and recompiling the software.
 
-![image.png](https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mzc0NCwicHVyIjoiYmxvYl9pZCJ9fQ==--1ebebd499509e567baf32a4d26eba8365383fcd7/image.png)
+![image.png](https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mzc0NywicHVyIjoiYmxvYl9pZCJ9fQ==--eb9becdbbd18a964a8dcb44ef0530d5f86463092/image.png)
+
 ![image.png](https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mzc0NiwicHVyIjoiYmxvYl9pZCJ9fQ==--4673d7fd5f9f0292074f50b593dc51e9dc0f4114/image.png)  
 
