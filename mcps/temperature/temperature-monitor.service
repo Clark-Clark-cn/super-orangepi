@@ -1,0 +1,15 @@
+[Unit]
+Description=Temperature and Humidity Monitor Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/home/orangepi/super-orangepi/mcps/temperature/temperature 3 /var/lib/temperature_humidity.json
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

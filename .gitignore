@@ -3,8 +3,10 @@
 bin/
 build/
 dist/
-node_modules/
+node_modules*/
+app/
 .env
 .env.local
 .env.*.local
 *log
+*.deb

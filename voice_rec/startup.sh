@@ -246,7 +246,7 @@ check_service_status() {
 
     # 显示端口信息
     log_info "服务端口信息:"
-    log_info "  - 核心AI服务 (WebSocket): http://localhost:8000"
+    log_info "  - 核心AI服务 (WebSocket): http://localhost:8004"
     log_info "  - 管理API: http://localhost:8002"
     log_info "  - 管理界面: http://localhost:8001 (开发模式)"
 }

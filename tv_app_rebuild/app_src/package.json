@@ -1,0 +1,49 @@
+{
+  "name": "dianshitime",
+  "version": "1.0.7",
+  "description": "An Electron application with Vue and TypeScript",
+  "main": "./out/main/index.js",
+  "author": {
+    "name": "hedashen",
+    "email": "hedashen@example.com"
+  },
+  "homepage": "https://electron-vite.org",
+  "scripts": {
+    "build": "USE_SYSTEM_FPM=true electron-builder --arm64"
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@nut-tree-fork/nut-js": "^4.2.6",
+    "axios": "^1.12.2",
+    "electron-store": "^8.2.0",
+    "electron-updater": "^6.3.9",
+    "loudness": "^0.4.2",
+    "qrcode.vue": "^3.6.0",
+    "swiper": "^11.2.10",
+    "vue-router": "^4.5.1"
+  },
+  "build": {
+    "appId": "com.hedashen.dianshitime",
+    "productName": "电视时光",
+    "files": [
+      ".fitten/**/*",
+      "out/**/*",
+      "public/**/*",
+      "resources/**/*"
+    ],
+    "asarUnpack": [
+      "resources/**/*"
+    ],
+    "linux": {
+      "target": [
+        "deb"
+      ],
+      "category": "AudioVideo"
+    }
+  },
+  "devDependencies": {
+    "electron": "^31.0.1",
+    "electron-builder": "^24.13.3"
+  }
+}
