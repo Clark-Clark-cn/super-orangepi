@@ -12,6 +12,7 @@ const util = require("util");
 const electronUpdater = require("electron-updater");
 const icon = path.join(__dirname, "../../resources/icon.png");
 const customIconsPath = path.join(electron.app.getPath("userData"), "custom_icons");
+const nutJs = require("@nut-tree-fork/nut-js");
 if (!fs.existsSync(customIconsPath)) {
   fs.mkdirSync(customIconsPath, { recursive: true });
 }

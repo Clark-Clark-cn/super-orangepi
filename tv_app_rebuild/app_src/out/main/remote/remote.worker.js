@@ -96,35 +96,6 @@ async function initializeRemoteServices() {
     console.log(`[Worker] Detected platform: ${process.platform}. Loading input module...`);
     try {
       switch (process.platform) {
-        case "win32":
-          Input = await Promise.resolve().then(() => require("../chunks/inputWin-BzjUvCPg.js"));
-          const { initializeXboxController, handleGamepadInput } = await Promise.resolve().then(() => require("../chunks/inputXbox-DmjIVBKf.js"));
-          Input.handleGamepadInput = handleGamepadInput;
-          const vibrationCallback = (data) => {
-            if (gamepadClientInfo && gamepadUdpServer) {
-              if (data.large > 0 || data.small > 0) {
-                const vibrationPacket = Buffer.alloc(3);
-                vibrationPacket[0] = UDP_TYPE.VIBRATION;
-                vibrationPacket[1] = data.large;
-                vibrationPacket[2] = data.small;
-                console.log(`[Worker] 发送振动 UDP: large=${data.large}, small=${data.small}, to ${gamepadClientInfo.address}:${gamepadClientInfo.port}`);
-                gamepadUdpServer.send(
-                  vibrationPacket,
-                  gamepadClientInfo.port,
-                  gamepadClientInfo.address,
-                  (err) => {
-                    if (err) {
-                      console.error("[Worker] Failed to send vibration UDP packet:", err);
-                    } else {
-                      console.log("[Worker] 振动数据发送成功");
-                    }
-                  }
-                );
-              }
-            }
-          };
-          await initializeXboxController(vibrationCallback);
-          break;
         case "darwin":
           Input = await Promise.resolve().then(() => require("../chunks/inputMac-CY4JAoRi.js"));
           break;

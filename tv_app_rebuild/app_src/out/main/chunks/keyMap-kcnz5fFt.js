@@ -1,5 +1,5 @@
 "use strict";
-const nutJs = require("@nut-tree/nut-js");
+const nutJs = require("@nut-tree-fork/nut-js");
 const KEY_MAP = {
   // 方向键
   "up": nutJs.Key.Up,

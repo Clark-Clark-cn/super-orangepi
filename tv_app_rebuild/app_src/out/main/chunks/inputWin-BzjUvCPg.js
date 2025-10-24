@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const nutJs = require("@nut-tree/nut-js");
+const nutJs = require("@nut-tree-fork/nut-js");
 const keyMap = require("./keyMap-kcnz5fFt.js");
 nutJs.mouse.config.mouseSpeed = 1e4;
 nutJs.keyboard.config.autoDelayMs = 2;
