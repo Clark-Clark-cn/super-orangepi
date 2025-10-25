@@ -172,6 +172,7 @@
       "resources/**/*"
     ],
     "linux": {
+      "icon": "resources/icon.png",
       "target": [
         "deb"
       ],

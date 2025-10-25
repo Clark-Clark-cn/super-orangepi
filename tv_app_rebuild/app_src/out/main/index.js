@@ -10,7 +10,10 @@ const os = require("os");
 const child_process = require("child_process");
 const util = require("util");
 const electronUpdater = require("electron-updater");
-const icon = path.join(__dirname, "../../resources/icon.png");
+// 应用图标：Windows 使用 .ico，Linux 使用 .png
+const iconPngPath = path.join(__dirname, "../../resources/icon.png");
+const iconIcoPath = path.join(__dirname, "../../resources/icon.ico");
+const appWindowIcon = process.platform === "win32" ? iconIcoPath : iconPngPath;
 const customIconsPath = path.join(electron.app.getPath("userData"), "custom_icons");
 const nutJs = require("@nut-tree-fork/nut-js");
 if (!fs.existsSync(customIconsPath)) {
@@ -856,8 +859,27 @@ function initializeViewManager(win) {
     },
     goBack: () => {
       const views = viewRegistry.get(activeViewType);
-      if (views && views.contentView.webContents.navigationHistory.canGoBack()) {
-        views.contentView.webContents.navigationHistory.goBack();
+      if (views) {
+        const wc = views.contentView.webContents;
+        if (!wc || wc.isDestroyed()) return;
+        // 兼容旧版与新版 Electron：
+        // - 旧版：webContents.canGoBack()/goBack()
+        // - 新版：webContents.navigationHistory.canGoBack(布尔或函数)/goBack()
+        try {
+          if (typeof wc.canGoBack === "function") {
+            if (wc.canGoBack()) wc.goBack();
+            return;
+          }
+          const hist = wc.navigationHistory;
+          if (hist) {
+            const canGo = typeof hist.canGoBack === "function" ? hist.canGoBack() : !!hist.canGoBack;
+            if (canGo && typeof hist.goBack === "function") {
+              hist.goBack();
+            }
+          }
+        } catch (e) {
+          console.error("[ViewManager] 执行返回时出错:", e);
+        }
       }
     },
     returnToHome: () => {
@@ -1268,6 +1290,37 @@ let remoteWorker = null;
 let remoteWorkerRestartCount = 0;
 const MAX_REMOTE_WORKER_RESTARTS = 3;
 let appTray = null;
+// 置顶展示错误对话框，避免被其他窗口遮挡
+async function showTopMostError(title, message) {
+  try {
+    const buttons = ["确定"];
+    if (mainWindow) {
+      const prevTop = mainWindow.isAlwaysOnTop();
+      try {
+        // 使用最高级别以尽量确保置顶（Linux/Wayland 下行为取决于 WM）
+        mainWindow.setAlwaysOnTop(true, "screen-saver");
+        await electron.dialog.showMessageBox(mainWindow, {
+          type: "error",
+          title,
+          message: String(message || "未知错误"),
+          buttons
+        });
+      } finally {
+        mainWindow.setAlwaysOnTop(prevTop);
+        try { mainWindow.focus(); } catch {}
+      }
+    } else {
+      await electron.dialog.showMessageBox({
+        type: "error",
+        title,
+        message: String(message || "未知错误"),
+        buttons
+      });
+    }
+  } catch (err) {
+    console.error("[ErrorDialog] 显示错误对话框失败:", err);
+  }
+}
 function createWindow() {
   mainWindow = new electron.BrowserWindow({
     title: "电视时光",
@@ -1281,7 +1334,7 @@ function createWindow() {
     // 设置为全屏模式
     frame: false,
     // 隐藏边框
-    ...process.platform === "linux" ? { icon } : {},
+    ...(process.platform === "linux" || process.platform === "win32" ? { icon: appWindowIcon } : {}),
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.js"),
       sandbox: false
@@ -1319,6 +1372,38 @@ electron.app.whenReady().then(async () => {
     viewManager = initializeViewManager(mainWindow);
     registerIpcHandlers(mainWindow, viewManager);
   }
+  // 捕获主进程异常并置顶显示
+  process.on("uncaughtException", (err) => {
+    console.error("[Main] uncaughtException:", err);
+    showTopMostError("程序发生未捕获异常", err?.stack || err?.message || String(err));
+  });
+  process.on("unhandledRejection", (reason) => {
+    console.error("[Main] unhandledRejection:", reason);
+    const msg = typeof reason === "object" && reason !== null ? (reason.stack || reason.message || JSON.stringify(reason)) : String(reason);
+    showTopMostError("出现未处理的 Promise 拒绝", msg);
+  });
+  // 捕获渲染进程崩溃/无响应/预加载错误并置顶显示
+  electron.app.on("web-contents-created", (_e, contents) => {
+    contents.on("render-process-gone", (_event, details) => {
+      console.error("[Renderer] render-process-gone:", details);
+      showTopMostError("渲染进程已退出", `${details.reason || "unknown"} (exitCode: ${details.exitCode ?? "?"})`);
+    });
+    contents.on("unresponsive", () => {
+      console.error("[Renderer] unresponsive");
+      showTopMostError("页面无响应", "当前页面长时间无响应，请尝试稍后重试或重启应用。");
+    });
+    contents.on("preload-error", (_event, preloadPath, error) => {
+      console.error("[Renderer] preload-error:", preloadPath, error);
+      showTopMostError("预加载脚本错误", `${preloadPath}\n\n${error?.stack || error}`);
+    });
+    contents.on("did-fail-load", (_event, errorCode, errorDescription, validatedURL) => {
+      // 网络失败类问题不一定弹窗，这里仅记录严重错误（如 -3: ABORTED 等忽略）
+      if (errorCode && errorCode !== -3) {
+        console.error("[Renderer] did-fail-load:", errorCode, errorDescription, validatedURL);
+        showTopMostError("页面加载失败", `${errorDescription} (${errorCode})\nURL: ${validatedURL}`);
+      }
+    });
+  });
   electron.app.on("activate", function() {
     if (electron.BrowserWindow.getAllWindows().length === 0) createWindow();
   });
@@ -1376,10 +1461,14 @@ function startRemoteWorker() {
   });
   remoteWorker.on("error", (error) => {
     console.error("[Main] Worker process error:", error);
+    showTopMostError("后台服务错误", error?.stack || error?.message || String(error));
   });
   remoteWorker.on("exit", (code) => {
     console.log(`[Main] Worker process exited with code ${code}`);
     remoteWorker = null;
+    if (typeof code === "number" && code !== 0) {
+      showTopMostError("后台服务退出", `远程工作进程已退出 (code: ${code})`);
+    }
     if (remoteWorkerRestartCount < MAX_REMOTE_WORKER_RESTARTS) {
       remoteWorkerRestartCount++;
       console.log(`[Main] Restarting worker process (${remoteWorkerRestartCount}/${MAX_REMOTE_WORKER_RESTARTS})...`);
