@@ -426,28 +426,18 @@ def interactive_mode():
     else:
         print("[结果] 获取波特率失败或响应超时。")
 
-    print("\n--- 红外学习模块控制器 ---")
-    print("1: 进入内部学习模式 (学习并存到模块)")
-    print("2: 发送内部存储的红外码")
-    print("3: 设置波特率")
-    print("4: 获取波特率")
-    print("5: 设置模块地址")
-    print("6: 获取模块地址")
-    print("7: 复位模块")
-    print("8: 格式化模块")
-    print("9: 退出内部学习模式")
-    print("10: 设置上电发送内部编码状态")
-    print("11: 获取上电发送内部编码状态")
-    print("12: 设置上电发送延时时间")
-    print("13: 获取上电发送延时时间")
-    print("14: 写入内部存储编码")
-    print("15: 读取内部存储编码")
-    print("16: 进入外部学习模式")
-    print("17: 退出外部学习模式")
-    print("18: 发送外部存储编码")
-    print("19: 从文件发送外部编码")
-    print("20: 退出程序")
-    print("--------------------------")
+    print("\n-------------------- 红外学习模块控制器 --------------------")
+    print(" 1: 进入内部学习模式 (学习并存到模块)     2: 发送内部存储的红外码")
+    print(" 3: 设置波特率                            4: 获取波特率")
+    print(" 5: 设置模块地址                          6: 获取模块地址")
+    print(" 7: 复位模块                              8: 格式化模块")
+    print(" 9: 退出内部学习模式                      10: 设置上电发送内部编码状态")
+    print("11: 获取上电发送内部编码状态              12: 设置上电发送延时时间")
+    print("13: 获取上电发送延时时间                  14: 写入内部存储编码")
+    print("15: 读取内部存储编码                      16: 外部学习模式 (输入文件名保存)")
+    print("17: 退出外部学习模式                      18: 发送外部存储编码")
+    print("19: 从文件发送外部编码                    20: 退出程序")
+    print("------------------------------------------------------------")
 
     while True:
         choice = input("请输入选项 (1-20): ")
@@ -719,11 +709,18 @@ def interactive_mode():
                 print("[结果] 读取失败。")
 
         elif choice == '16':
+            filename = input("请输入要保存的文件名 (如: tv_power.hex): ").strip()
+            if not filename:
+                print("文件名不能为空。")
+                continue
+            if not filename.endswith('.hex'):
+                filename += '.hex'
+            
             print("\n[动作] 进入外部学习模式...")
             command = build_frame(0x20)
             ser.write(command)
             print("指令已发送。请在10秒内将遥控器对准模块并按下按键。")
-            print("学习成功后，模块会发送包含红外数据的上报帧，并自动保存到文件。")
+            print(f"学习成功后，红外编码将保存到文件: {filename}")
             
             # 等待更长时间，因为学习需要时间
             response = ser.read(500)  # 增加缓冲区大小
@@ -739,7 +736,6 @@ def interactive_mode():
                     data = response[data_start:data_end]
                     
                     if data:
-                        filename = f"ir_code_{int(time.time())}.hex"
                         try:
                             with open(filename, 'w') as f:
                                 f.write(data.hex(' '))
@@ -761,7 +757,6 @@ def interactive_mode():
                         if response2 and len(response2) >= 7 and response2[0] == 0x68 and response2[4] == 0x22:
                             data = response2[5:-2]
                             if data:
-                                filename = f"ir_code_{int(time.time())}.hex"
                                 try:
                                     with open(filename, 'w') as f:
                                         f.write(data.hex(' '))

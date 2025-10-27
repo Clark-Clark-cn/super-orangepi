@@ -26,6 +26,29 @@
 pip3 install pyserial
 ```
 
+## 权限设置
+
+脚本需要访问串口设备 `/dev/ttyS1`。如果遇到权限问题：
+
+### 自动设置（推荐）
+```bash
+./setup_serial_permissions.sh
+```
+
+### 手动设置
+```bash
+# 添加用户到dialout组
+sudo usermod -a -G dialout $USER
+
+# 重新登录或运行以下命令使组更改生效
+newgrp dialout
+
+# 检查权限
+ls -l /dev/ttyS1  # 应该显示 crw-rw---- root dialout
+```
+
+**注意**：如果仍然遇到权限问题，请重新登录系统或重启终端。
+
 ## 使用方法
 
 ### 交互模式
