@@ -4,3 +4,6 @@
 [submodule "voice_rec/xiaozhi-esp32-server"]
 	path = voice_rec/xiaozhi-esp32-server
 	url = git@github.com:Clark-clark-cn/xiaozhi-esp32-server.git
+[submodule "voice_rec/voiceprint-api"]
+	path = voice_rec/voiceprint-api
+	url = git@github.com:Clark-Clark-cn/voiceprint-api.git
